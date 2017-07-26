@@ -1,6 +1,4 @@
 
-\.settings/
+Test/\.settings/
 
-Debug/
-
-Drivers/
+Test/Debug/

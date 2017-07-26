@@ -2,9 +2,9 @@
   ******************************************************************************
   * @file      startup_stm32f411xe.s
   * @author    MCD Application Team
-  * @version   V2.4.2
-  * @date      13-November-2015
-  * @brief     STM32F411xExx Devices vector table for GCC based toolchains. 
+  * @version   V1.8.0
+  * @date      09-November-2016
+  * @brief     STM32F411xExx Devices vector table for System Workbench for STM32. 
   *            This module performs:
   *                - Set the initial SP
   *                - Set the initial PC == Reset_Handler,
@@ -16,7 +16,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2016 STMicroelectronics</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
