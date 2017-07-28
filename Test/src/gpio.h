@@ -8,9 +8,8 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_gpio.h"
 
-
-#ifndef EXTRA_H_
-#define EXTRA_H_
+#ifndef GPIO_H_
+#define GPIO_H_
 
 #ifndef GPIO_Pin_0
 #define GPIO_Pin_0		((uint16_t)0x0001)
@@ -63,13 +62,8 @@ void GPIOSetPinModeOut(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
 void GPIOSetPinModeIn(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
 void GPIOSetPinModeAF(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
 
-void GPIOSetOutputTypePP(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
-void GPIOSetOutputTypeOD(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
-
-void GPIOSetSpeed(GPIO_TypeDef* GPIOx, uint16_t GPIOPin, GPIOSpeed GPIOSpeed);
-
 void GPIOSetPu(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
 void GPIOSetPd(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
 void GPIOSetNoPuPd(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
 
-#endif /* EXTRA_H_ */
+#endif /* GPIO_H_ */
