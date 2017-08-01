@@ -12,7 +12,7 @@ static TIM_TimeBaseInitTypeDef timer;
 
 
 /**
- *
+ * Funkcija za inicijalizaciju TIM3 i PWM na PC6,8,9 za DC motor
  */
 void DC_Init(){
 	NVIC_InitTypeDef nested_vector;
@@ -51,9 +51,9 @@ void DC_Init(){
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource9, GPIO_AF_TIM3);
 }
 /**
- *
- * @param motor
- * @param speed
+ * Funkcija za setovanje brzine DC motora
+ * @param motor Izbor motora koji se podesava
+ * @param speed Izbor brzine okretanja motora
  */
 void DC_SetSpeed(DC_Motor motor, DC_Speed speed){
 	pwm.TIM_Pulse = speed;

@@ -56,14 +56,14 @@ typedef enum {
 	TM_GPIO_PuPd_DOWN = 0x02
 } GPIOPuPd;
 
-void InitGPIO(GPIO_TypeDef* GPIOx, uint16_t GPIOPin, GPIOMode GPIOMode, GPIOOType GPIOOType, GPIOPuPd GPIOPuPd, GPIOSpeed GPIOSpeed);
+void InitGPIO(GPIO_TypeDef* GPIOx, uint32_t GPIOPin, GPIOMode GPIOMode, GPIOOType GPIOOType, GPIOPuPd GPIOPuPd, GPIOSpeed GPIOSpeed);
 
-void GPIOSetPinModeOut(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
-void GPIOSetPinModeIn(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
-void GPIOSetPinModeAF(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
+void GPIOSetPinModeOut(GPIO_TypeDef* GPIOx, uint32_t GPIOPin);
+void GPIOSetPinModeIn(GPIO_TypeDef* GPIOx, uint32_t GPIOPin);
+void GPIOSetPinModeAF(GPIO_TypeDef* GPIOx, uint32_t GPIOPin);
 
-void GPIOSetPu(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
-void GPIOSetPd(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
-void GPIOSetNoPuPd(GPIO_TypeDef* GPIOx, uint16_t GPIOPin);
+void GPIOSetPu(GPIO_TypeDef* GPIOx, uint32_t GPIOPin);
+void GPIOSetPd(GPIO_TypeDef* GPIOx, uint32_t GPIOPin);
+void GPIOSetNoPuPd(GPIO_TypeDef* GPIOx, uint32_t GPIOPin);
 
 #endif /* GPIO_H_ */
