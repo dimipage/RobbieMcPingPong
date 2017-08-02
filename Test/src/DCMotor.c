@@ -38,8 +38,8 @@ void DC_Init(){
 	TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
 
 	nested_vector.NVIC_IRQChannel = TIM3_IRQn;
-	nested_vector.NVIC_IRQChannelPreemptionPriority = 0;
-	nested_vector.NVIC_IRQChannelSubPriority = 1;
+	nested_vector.NVIC_IRQChannelPreemptionPriority = 1;
+	nested_vector.NVIC_IRQChannelSubPriority = 0;
 	nested_vector.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&nested_vector);
 

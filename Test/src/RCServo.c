@@ -43,8 +43,8 @@ void RC_Init(){
 	TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
 
 	nested_vector.NVIC_IRQChannel = TIM4_IRQn;
-	nested_vector.NVIC_IRQChannelPreemptionPriority = 0;
-	nested_vector.NVIC_IRQChannelSubPriority = 1;
+	nested_vector.NVIC_IRQChannelPreemptionPriority = 1;
+	nested_vector.NVIC_IRQChannelSubPriority = 0;
 	nested_vector.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&nested_vector);
 
