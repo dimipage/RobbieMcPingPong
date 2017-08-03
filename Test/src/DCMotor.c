@@ -7,8 +7,8 @@
 #include "DCMotor.h"
 
 
-static TIM_OCInitTypeDef pwm;
-static TIM_TimeBaseInitTypeDef timer;
+TIM_OCInitTypeDef pwm;
+TIM_TimeBaseInitTypeDef timer;
 
 
 /**
