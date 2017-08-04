@@ -19,7 +19,6 @@ static TIM_OCInitTypeDef pwm;
  *
  */
 void RC_Init(){
-
 	NVIC_InitTypeDef nested_vector;
 
 	timer_test.TIM_Prescaler = 30;
@@ -38,6 +37,7 @@ void RC_Init(){
 	6.5% duty cycle:     pulse_length = ((65535 + 1) * 6.5) / 100 - 1 = 4259
 	7.5% duty cycle:     pulse_length = ((65535 + 1) * 7.5) / 100 - 1 = 4914                      +2?
 	8.5% duty cycle:  	 pulse_length = ((65535 + 1) * 8.5) / 100 - 1 = 5569
+	6552
 */
 	RC_SetAngle(0.0);
 	TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
@@ -60,7 +60,6 @@ void RC_SetAngle(double angle){
 	if(angle > -90.0 && angle < 90.0)
 		PWM_SetPulse(&pwm,(uint32_t) (INIT_ANGLE_PULSE + (ANGLE_STEP * angle)));
 	TIM_OC1Init(TIM4, &pwm);
-
 }
 /**
  *

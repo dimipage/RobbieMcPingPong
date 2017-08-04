@@ -13,7 +13,8 @@
 typedef enum{
 	SYSTEM_NON_INIT,
 	SYSTEM_START,
-	SYSTEM_OUT_OF_BALLS
+	SYSTEM_OUT_OF_BALLS,
+	SYSTEM_TEST
 } LED_STATE;
 typedef struct{
 	LED_STATE state;

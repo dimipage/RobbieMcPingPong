@@ -12,9 +12,10 @@
 #include "gpio.h"
 
 typedef enum {
-	SPEED_HIGH = 4000, //dodaj vrednosti posle
-	SPEED_MID = 2000,
-	SPEED_LOW = 500
+	SPEED_EASY = 3000,
+	SPEED_MEDIUM = 3500,
+	SPEED_HARD = 4000,
+	SPEED_BAJCHA = 5080
 }DC_Speed;
 
 typedef enum {

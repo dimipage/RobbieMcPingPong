@@ -37,6 +37,8 @@ void LED_SetState(LED_InitType* led, LED_STATE st){
 		led->counter = -1;
 		GPIO_ResetBits(led->GPIOx, led->pin);
 		break;
+	case SYSTEM_TEST:
+		led->counter = 1;
 	}
 }
 /**
