@@ -29,6 +29,7 @@
 volatile uint32_t btn_start_time = 0;
 volatile int btn_flag_set = -1; // -1:FALSE 1:TRUE
 extern volatile uint32_t ticks = 0;
+
 //debounce
 #define DEBOUNCE 50
 volatile int falling_edge = 1;
@@ -50,6 +51,9 @@ int main(void){
 	//servo buttons
 	InitGPIO(GPIOC, GPIO_Pin_10, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	InitGPIO(GPIOC, GPIO_Pin_11, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	//stepper buttons
+	InitGPIO(GPIOC, GPIO_Pin_12, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	InitGPIO(GPIOD, GPIO_Pin_2, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	//
 	led = LED_Init(SYSTEM_TEST, GPIO_Pin_13, GPIOB);
 	InitGPIO(GPIOA, GPIO_Pin_5, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_100MHz);
@@ -61,25 +65,39 @@ int main(void){
 	SysTickInit(1000); //1ms
 
 	DC_Init();
-	DC_SetSpeed(MOT1, SPEED_BAJCHA);
-	DC_SetSpeed(MOT2, SPEED_BAJCHA);
+	DC_SetSpeed(MOT1, SPEED_MEDIUM);
+	DC_SetSpeed(MOT2, SPEED_HARD);
 	DC_SetSpeed(MOT3, SPEED_BAJCHA);
 
 	RC_Init();
-	SEG_DisplayNumber(0);
+	SEG_DisplayNumber(5);
+
+	Step_Init();
 	double angle = 0.0;
+
 #define INCREMENT 5
-	for(;;){
+
+	for(;;){/*
 		if(!GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_10)){
 			angle -= INCREMENT;
 			RC_SetAngle(angle);
 			Delay(100);
 		}
-		else if(!GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_11)){
+		if(!GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_11)){
 			angle += INCREMENT;
 			RC_SetAngle(angle);
 			Delay(100);
 		}
+		if(!GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_12)){
+			Step_Step();
+			Delay(100);
+		}
+		if(!GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_2)){
+			Step_Stepback();
+			Delay(100);
+		}*/
+		Step_Stepback();
+
 	}
 }
 void EXTI15_10_IRQHandler(){
