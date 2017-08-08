@@ -8,49 +8,47 @@
 // TIM_TimeBaseInitTypeDef timer;
 
 int step_counter = 0;
-static void Step_Sequence_fwd();
-static void Step_Sequence_bcwd();
 
 /**
- *
+ * Inicijalizacija GPIO za stepper
  */
 void Step_Init(){
-	InitGPIO(GPIOB, GPIO_Pin_1, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_DOWN, GPIO_Speed_100MHz);
-	InitGPIO(GPIOB, GPIO_Pin_2, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_DOWN, GPIO_Speed_100MHz);
-	InitGPIO(GPIOB, GPIO_Pin_14, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_DOWN, GPIO_Speed_100MHz);
-	InitGPIO(GPIOB, GPIO_Pin_15, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_DOWN, GPIO_Speed_100MHz);
+	GPIOInit(GPIOB, GPIO_Pin_1, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_DOWN, GPIO_Speed_100MHz);
+	GPIOInit(GPIOB, GPIO_Pin_2, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_DOWN, GPIO_Speed_100MHz);
+	GPIOInit(GPIOB, GPIO_Pin_14, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_DOWN, GPIO_Speed_100MHz);
+	GPIOInit(GPIOB, GPIO_Pin_15, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_DOWN, GPIO_Speed_100MHz);
 }
 /**
- *
+ * Stepper pravi jedan korak tj pomeraj da kuglica prodje do DC motora
  */
 void Step_Step(){
-	int counter = 67;
-	if(step_counter < 2)
-		counter = 66;
-	else
-		step_counter = -1;
-	for(; counter > 0; counter--)
-		Step_Sequence_fwd();
-	step_counter++;
+	if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9)){
+		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+			Step_Sequence_fwd();
+		while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+			Step_Sequence_fwd();
+	}
+	else while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+			Step_Sequence_fwd();
 }
 /**
- *
+ * Stepper pravi jedan korak tj pomeraj unazad
  */
 void Step_Stepback(){
-	int counter = 66;
-	if(step_counter == 2)
-		counter = 67;
-	else
-		if(step_counter == 0)
-			step_counter = 3;
-	for(; counter > 0; counter--)
-		Step_Sequence_bcwd();
-	step_counter--;
+	if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9)){
+		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+			Step_Sequence_bcwd();
+		while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+			Step_Sequence_bcwd();
+	}
+	else while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+			Step_Sequence_bcwd();
 }
 /**
- *
+ * Sekvenca za pomeranje stepera u smeru kazaljke na satu
+ * realizovana preko GPIO
  */
-static void Step_Sequence_fwd(){
+void Step_Sequence_fwd(){
 	Delay(15);
 
 	GPIO_SetBits(GPIOB, GPIO_Pin_1); //GPIO_Write();
@@ -75,13 +73,13 @@ static void Step_Sequence_fwd(){
 	GPIO_ResetBits(GPIOB, GPIO_Pin_2);
 	GPIO_ResetBits(GPIOB, GPIO_Pin_14);
 	GPIO_SetBits(GPIOB, GPIO_Pin_15);
-	//GPIO_ResetBits(GPIOB, GPIO_Pin_1); //????
-	//Delay(5);
+
 }
 /**
- *
+ * Sekvenca za pomeranje stepera u smeru suprotnom kazaljke na satu
+ * realizovana preko GPIO
  */
-static void Step_Sequence_bcwd(){
+void Step_Sequence_bcwd(){
 	Delay(15);
 
 	GPIO_SetBits(GPIOB, GPIO_Pin_1); //GPIO_Write();
@@ -106,4 +104,17 @@ static void Step_Sequence_bcwd(){
 	GPIO_SetBits(GPIOB, GPIO_Pin_2);
 	GPIO_ResetBits(GPIOB, GPIO_Pin_14);
 	GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+}
+
+
+
+void Step_BackInit(){
+	if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9)){
+		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+			Step_Sequence_bcwd();
+		while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+			Step_Sequence_bcwd();
+	}
+	else while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+			Step_Sequence_bcwd();
 }

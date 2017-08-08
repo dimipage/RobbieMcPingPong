@@ -6,53 +6,41 @@
  */
 
 #include "pwm.h"
+
 /**
- *
- * @param pwmOC
- * @param pulse
+ * Podesavanje impulsa PWM-a
+ * @param pwmOC Kanal PWM-a
+ * @param pulse Duzina impulsa (ako predje max vrednost preskalera linija je stalno HIGH)
  */
 void PWM_SetPulse(TIM_OCInitTypeDef* pwmOC,uint32_t pulse){
 	pwmOC->TIM_Pulse = pulse;
 }
 /**
- *
- * @param pwmOC
- * @return
- */
-uint32_t PWM_GetPulse(TIM_OCInitTypeDef* pwmOC){
-	return pwmOC->TIM_Pulse;
-}
-/**
- *
- * @param pwmOC
- * @param pulse
+ * Povecava duzinu impulsa
+ * @param pwmOC Kanal PWM-a koji se povecava
+ * @param pulse Inkrement
  */
 void PWM_IncPulse(TIM_OCInitTypeDef* pwmOC,uint32_t inc){
-	if((65535 - inc) > pwmOC->TIM_Pulse)
+	if((65535 - inc) > pwmOC->TIM_Pulse) //65535 max vrednost za preskaler samim tim i za impuls
 		pwmOC->TIM_Pulse += inc;
 }
 /**
- *
- * @param pwmOC
- * @param pulse
+ * Smanjuje duzinu impulsa
+ * @param pwmOC Kanal PWM-a koji se povecava
+ * @param pulse Inkrement
  */
 void PWM_DecPulse(TIM_OCInitTypeDef* pwmOC,uint32_t inc){
 	if(pwmOC->TIM_Pulse > inc)
 		pwmOC->TIM_Pulse -= inc;
 }
 /**
- *
- * @param
+ * Podesavanje DutyCycle-a PWM kanala
+ * @param pwmOC Kanal PWM-a
+ * @param duty DutyCycle u procentima
  */
-void PWM_SetDutyCycle(TIM_OCInitTypeDef* pwmOC, double duty){
+void PWM_SetDutyCycle(TIM_OCInitTypeDef* pwmOC, double duty, TIM_TimeBaseInitTypeDef* tim){
 	if(duty > 0.0 && duty < 100.0)
-		pwmOC->TIM_Pulse = (uint32_t) ((65535 + 1) * duty) / 100 - 1;
+		//pwmOC->TIM_Pulse = (uint32_t) ((65535 + 1) * duty) / 100 - 1;
+		pwmOC->TIM_Pulse = (uint32_t) (tim->TIM_Period/100)*duty;
 }
-/**
- *
- * @param
- * @return
- */
-double PWM_GetDutyCycle(TIM_OCInitTypeDef* pwmOC){
-	return (pwmOC->TIM_Pulse + 1)*100/(65535 + 1);
-}
+

@@ -11,11 +11,14 @@
 #include "gpio.h"
 #include "stm32f4xx_tim.h"
 
-#define SPIN 4
-#define FIELDS 6
 
+typedef enum{
+	spin,
+	field
+}MODE_FLAG;
 
 void SEG_Init();
 void SEG_DisplayNumber(uint8_t num);
 void SEG_Inc();
+void SEG_ChangeMode(MODE_FLAG m);
 #endif /* SEG_H_ */

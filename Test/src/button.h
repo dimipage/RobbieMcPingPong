@@ -24,4 +24,8 @@ typedef struct{ //nije u upotrebi
 }button;
 
 void Btn_Init(uint16_t p, uint8_t EXTI_PinSrcX, uint8_t EXTIx_IRQn, GPIO_TypeDef* x, uint8_t EXTI_PortSrcGPIOx, FunctionalState st, EXTITrigger_TypeDef tr, uint8_t prior, uint8_t subprior);
+// ^----- hardkoduj, nema potrebe ovako
+void Btn_DeInit();//dovrsi
+
+
 #endif /* BUTTON_H_ */

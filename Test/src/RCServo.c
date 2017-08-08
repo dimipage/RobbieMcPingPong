@@ -16,7 +16,7 @@ static TIM_TimeBaseInitTypeDef timer_test;
 static TIM_OCInitTypeDef pwm;
 
 /**
- *
+ * Inicijalizacija TIM4, PWM CH1 na PB6
  */
 void RC_Init(){
 	NVIC_InitTypeDef nested_vector;
@@ -48,13 +48,14 @@ void RC_Init(){
 	nested_vector.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&nested_vector);
 
-	InitGPIO(GPIOB, GPIO_Pin_6, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	GPIOInit(GPIOB, GPIO_Pin_6, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_TIM4);
 
 	TIM_OC1Init(TIM4, &pwm); //mozda
 }
 /**
- *
+ * Podesavanje ugla od +90 do -90
+ * @param angle Stepen pomeraja od -90 do +90
  */
 void RC_SetAngle(double angle){
 	if(angle > -90.0 && angle < 90.0)
@@ -62,11 +63,10 @@ void RC_SetAngle(double angle){
 	TIM_OC1Init(TIM4, &pwm);
 }
 /**
- *
- * @param pwmOC
- * @return
+ * Vraca ugao servo motora
+ * @return Ugao servo motora
  */
 double RC_GetAngle(){
-	return PWM_GetPulse(&pwm) - INIT_ANGLE_PULSE / ANGLE_STEP;
+	return pwm.TIM_Pulse - INIT_ANGLE_PULSE / ANGLE_STEP;
 }
 

@@ -7,65 +7,71 @@
 
 #include "seg.h"
 
-uint8_t mode_flag = -1; //-1 - za spin, 1 - za field
+#define SPIN 4 ///imamo 4 moguca spina
+#define FIELDS 6 ///6 polja za gadjanje na stolu
+
+
+MODE_FLAG mode;
 volatile uint8_t cnt;
-uint8_t num_array[10] = { 0xBF, 0x06, 0x5B, 0xCF, 0xE6, 0xED, 0xFD, 0xA7, 0xFF, 0xEF};
+uint8_t num_array[10] = { 0xBF, 0x06, 0x5B, 0xCF, 0xE6, 0xED, 0xFD, 0xA7, 0xFF, 0xEF}; ///cifre za 7seg
+
 /**
- *
+ * Inicijalizacija pinova za 7seg
  */
 void SEG_Init(){
-/*sclk*/	InitGPIO(GPIOC, GPIO_Pin_1, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
-/*data*/	InitGPIO(GPIOC, GPIO_Pin_0, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
-/* !EO*/	InitGPIO(GPIOB, GPIO_Pin_0, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
-/* rclk*/	InitGPIO(GPIOA, GPIO_Pin_4, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
-
-//timer
-
+/*sclk*/	GPIOInit(GPIOC, GPIO_Pin_1, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
+/*data*/	GPIOInit(GPIOC, GPIO_Pin_0, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
+/* !EO*/	GPIOInit(GPIOB, GPIO_Pin_0, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
+/* rclk*/	GPIOInit(GPIOA, GPIO_Pin_4, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
 }
+
 /**
- *
- * @param num
+ * Postavljanje cifre za 7seg
+ * @param num Cifra koja se prikazuje
  */
 void SEG_DisplayNumber(uint8_t num){
-	int i;
-	int j = 0;
+	int segment_counter;
 	volatile uint8_t BR = num_array[num];
 	if(num > -1 && num < 10){
-		for(i = 0; i<=8; i++){
+		for(segment_counter = 0; segment_counter<=8; segment_counter++){
 			GPIO_SetBits(GPIOC, GPIO_Pin_1);
 			if((BR & 0x80) > 0x00){
-				for(j = 1000; j>0; j--){}
 				GPIO_SetBits(GPIOC, GPIO_Pin_0);
-				for(j = 1000; j>0; j--){}
 			}else{
-				for(j = 1000; j>0; j--){}
 				GPIO_ResetBits(GPIOC, GPIO_Pin_0);
-				for(j = 1000; j>0; j--){}
 			}
 			GPIO_ResetBits(GPIOC, GPIO_Pin_1);
 			BR <<= 1;
-			for(j = 1000; j>0; j--){}
 		}
 		GPIO_SetBits(GPIOA, GPIO_Pin_4);
-		for(j = 1000; j>0; j--){}
 		GPIO_ResetBits(GPIOA, GPIO_Pin_4);
 
 		GPIO_SetBits(GPIOB, GPIO_Pin_0);
-		for(j = 1000; j>0; j--){}
 		GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 	}
 }
 /**
- *
+ * Inkrementiranje cifre na 7seg
  */
 void SEG_Inc(){
-	if(mode_flag)
+	switch(mode){
+	case spin:
 		if(cnt == FIELDS)
 			cnt = 0;
 		else cnt++;
-	else
+		break;
+	case field:
 		if(cnt == SPIN)
 			cnt = 0;
 		else cnt++;
+		break;
+	}
 	SEG_DisplayNumber(cnt);
+}
+/**
+ * Promena moda podesavanja robota
+ * @param m Enumeracija za podesavanje spina ili polja
+ */
+void SEG_ChangeMode(MODE_FLAG m){
+	mode = m;
 }

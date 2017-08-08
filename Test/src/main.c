@@ -37,6 +37,10 @@ volatile int rising_edge = -1;
 volatile int click = -1;
 //
 LED_InitType led, led2;
+GPIO_InitTypeDef test_btn_rc, test_btn_rc2;
+GPIO_InitTypeDef test_btn_step, test_btn_step2;
+GPIO_InitTypeDef nucleo_led;
+GPIO_InitTypeDef sen_top, sen_bottom;
 
 int main(void){
 /*425686*/
@@ -48,16 +52,19 @@ int main(void){
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 
+	//senzori GPIO
+	sen_top = GPIOInit(GPIOB, GPIO_Pin_9, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	sen_bottom = GPIOInit(GPIOB, GPIO_Pin_8, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	//servo buttons
-	InitGPIO(GPIOC, GPIO_Pin_10, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
-	InitGPIO(GPIOC, GPIO_Pin_11, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	test_btn_rc = GPIOInit(GPIOC, GPIO_Pin_10, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	test_btn_rc2 = GPIOInit(GPIOC, GPIO_Pin_11, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	//stepper buttons
-	InitGPIO(GPIOC, GPIO_Pin_12, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
-	InitGPIO(GPIOD, GPIO_Pin_2, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
-	//
+	test_btn_step = GPIOInit(GPIOC, GPIO_Pin_12, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	test_btn_step2 = GPIOInit(GPIOD, GPIO_Pin_2, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	//led
 	led = LED_Init(SYSTEM_TEST, GPIO_Pin_13, GPIOB);
-	InitGPIO(GPIOA, GPIO_Pin_5, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_100MHz);
-
+	nucleo_led = GPIOInit(GPIOA, GPIO_Pin_5, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_100MHz);
+	//dugmiki
 	Btn_Init(GPIO_Pin_13, EXTI_PinSource13, EXTI15_10_IRQn, GPIOC, EXTI_PortSourceGPIOC ,ENABLE, EXTI_Trigger_Rising_Falling, 1, 1);
 
 	SEG_Init();
@@ -65,29 +72,17 @@ int main(void){
 	SysTickInit(1000); //1ms
 
 	DC_Init();
-	DC_SetSpeed(MOT1, SPEED_MEDIUM);
-	DC_SetSpeed(MOT2, SPEED_HARD);
-	DC_SetSpeed(MOT3, SPEED_BAJCHA);
+	DC_SetSpeed(MOT1, 85);//PC6
+	DC_SetSpeed(MOT2, 100);//PC8
+	DC_SetSpeed(MOT3, 100);//PC9
 
 	RC_Init();
-	SEG_DisplayNumber(5);
+	SEG_DisplayNumber(2);
 
 	Step_Init();
-	double angle = 0.0;
+	Step_BackInit();
 
-#define INCREMENT 5
-
-	for(;;){/*
-		if(!GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_10)){
-			angle -= INCREMENT;
-			RC_SetAngle(angle);
-			Delay(100);
-		}
-		if(!GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_11)){
-			angle += INCREMENT;
-			RC_SetAngle(angle);
-			Delay(100);
-		}
+	for(;;){
 		if(!GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_12)){
 			Step_Step();
 			Delay(100);
@@ -95,9 +90,7 @@ int main(void){
 		if(!GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_2)){
 			Step_Stepback();
 			Delay(100);
-		}*/
-		Step_Stepback();
-
+		}
 	}
 }
 void EXTI15_10_IRQHandler(){
@@ -143,3 +136,4 @@ void Delay(uint32_t t){
 	  else
 	    while ((ticks >= start) || (ticks < end)){};
 }
+

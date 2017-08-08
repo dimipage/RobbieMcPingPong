@@ -12,7 +12,7 @@ TIM_TimeBaseInitTypeDef timer;
 
 
 /**
- * Funkcija za inicijalizaciju TIM3 i PWM na PC6,8,9 za DC motor
+ * Inicijalizacija TIM3 i PWM na PC6,8,9 za DC motore
  */
 void DC_Init(){
 	NVIC_InitTypeDef nested_vector;
@@ -25,12 +25,12 @@ void DC_Init(){
 	TIM_TimeBaseInit(TIM3, &timer);
 	TIM_Cmd(TIM3, ENABLE);
 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
-	pwm.TIM_OCMode = TIM_OCMode_PWM1; //PWM1 = Set on compare match ====== PWM2 = Clear on compare match
+	pwm.TIM_OCMode = TIM_OCMode_PWM1; //PWM1 = Set on compare match | PWM2 = Clear on compare match
 	pwm.TIM_OutputState = TIM_OutputState_Enable;
 	pwm.TIM_OCPolarity = TIM_OCPolarity_High;
-	pwm.TIM_Pulse = 2540; //test 50% duty
+	pwm.TIM_Pulse = 2540; //inicijalno
 
-	TIM_OC1Init(TIM3, &pwm); //start???
+	TIM_OC1Init(TIM3, &pwm);
 	TIM_OC3Init(TIM3, &pwm);
 	TIM_OC4Init(TIM3, &pwm);
 	TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
@@ -43,20 +43,20 @@ void DC_Init(){
 	nested_vector.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&nested_vector);
 
-	InitGPIO(GPIOC, GPIO_Pin_6, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
-	InitGPIO(GPIOC, GPIO_Pin_8, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
-	InitGPIO(GPIOC, GPIO_Pin_9, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	GPIOInit(GPIOC, GPIO_Pin_6, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	GPIOInit(GPIOC, GPIO_Pin_8, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+	GPIOInit(GPIOC, GPIO_Pin_9, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_TIM3);
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource8, GPIO_AF_TIM3);
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource9, GPIO_AF_TIM3);
 }
 /**
- * Funkcija za setovanje brzine DC motora
- * @param motor Izbor motora koji se podesava
- * @param speed Izbor brzine okretanja motora
+ * Podesavanje brzine DC motora
+ * @param motor Motor koji se podesava
+ * @param speed Brzina okretanja motora
  */
 void DC_SetSpeed(DC_Motor motor, DC_Speed speed){
-	pwm.TIM_Pulse = speed;
+	PWM_SetDutyCycle(&pwm, speed, &timer);
 	switch (motor){
 	case MOT1:
 		TIM_OC1Init(TIM3, &pwm);

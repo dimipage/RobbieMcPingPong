@@ -12,10 +12,10 @@
 #include "gpio.h"
 
 typedef enum {
-	SPEED_EASY = 3000,
-	SPEED_MEDIUM = 3500,
-	SPEED_HARD = 4000,
-	SPEED_BAJCHA = 5080
+	SPEED_EASY = 40,
+	SPEED_MEDIUM = 45,
+	SPEED_HARD = 50,
+	SPEED_BAJCHA = 65
 }DC_Speed;
 
 typedef enum {
@@ -26,5 +26,6 @@ typedef enum {
 
 void DC_SetSpeed(DC_Motor motor, DC_Speed speed);
 void DC_Init();
+void DC_DeInit(); // zavrsi
 
 #endif /* DCMOTOR_H_ */
