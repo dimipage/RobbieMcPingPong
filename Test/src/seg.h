@@ -11,14 +11,23 @@
 #include "gpio.h"
 #include "stm32f4xx_tim.h"
 
-
 typedef enum{
 	spin,
 	field
 }MODE_FLAG;
 
-void SEG_Init();
-void SEG_DisplayNumber(uint8_t num);
-void SEG_Inc();
-void SEG_ChangeMode(MODE_FLAG m);
+typedef struct{
+	MODE_FLAG mode;
+	volatile uint8_t cnt;
+	uint8_t num_array[10]; ///cifre za 7seg
+}SEG_Disp;
+
+
+
+void SEG_Init(SEG_Disp* disp);
+void SEG_DisplayNumber(uint8_t num, SEG_Disp* disp);
+void SEG_Inc(SEG_Disp* disp);
+void SEG_ChangeMode(MODE_FLAG m, SEG_Disp* disp);
+int SEG_GetNumber(SEG_Disp* disp);
+MODE_FLAG SEG_GetMode(SEG_Disp* disp);
 #endif /* SEG_H_ */

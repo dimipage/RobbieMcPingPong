@@ -12,8 +12,8 @@
 #define INIT_ANGLE_PULSE 4914
 #define ANGLE_STEP 18.2
 
-static TIM_TimeBaseInitTypeDef timer_test;
-static TIM_OCInitTypeDef pwm;
+TIM_TimeBaseInitTypeDef timer_test;
+TIM_OCInitTypeDef pwm;
 
 /**
  * Inicijalizacija TIM4, PWM CH1 na PB6
@@ -67,6 +67,6 @@ void RC_SetAngle(double angle){
  * @return Ugao servo motora
  */
 double RC_GetAngle(){
-	return pwm.TIM_Pulse - INIT_ANGLE_PULSE / ANGLE_STEP;
+	return (pwm.TIM_Pulse - INIT_ANGLE_PULSE / ANGLE_STEP);
 }
 

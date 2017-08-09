@@ -10,22 +10,10 @@
 
 #include "gpio.h"
 
-typedef enum{
-	SYSTEM_NON_INIT,
-	SYSTEM_START,
-	SYSTEM_OUT_OF_BALLS,
-	SYSTEM_TEST
-} LED_STATE;
-typedef struct{
-	LED_STATE state;
-	uint16_t pin;
-	GPIO_TypeDef* GPIOx;
-	uint16_t counter;
-}LED_InitType;
-
-LED_InitType LED_Init(LED_STATE state, uint16_t pin, GPIO_TypeDef* GPIOx);
-void LED_SetState(LED_InitType* led, LED_STATE st);
-void LED_Update(LED_InitType* l);
-
+void LED_Init();
+void LED_SetBlinkInterval(uint16_t time);
+void LED_Update();
+void LED_LightOn();
+void LED_LightOff();
 
 #endif /* LED_H_ */

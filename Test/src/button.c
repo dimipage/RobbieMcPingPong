@@ -6,36 +6,69 @@
  */
 #include "button.h"
 
-/**
- * Podesavanje namenskih dugmica za set, mode, start, poweroff
- * @param p Redni broj pina
- * @param EXTI_PinSrcX Izvor pina eksternog prekida
- * @param EXTIx_IRQn Prekidna linija
- * @param x Port pina
- * @param EXTI_PortSrcGPIOx Izvor porta
- * @param st ENABLE v DISABLE
- * @param tr Nacin okidanja
- * @param prior Prioritet prekida
- * @param subprior Podprioritet prekida
- */
-void Btn_Init(uint16_t p, uint8_t EXTI_PinSrcX, uint8_t EXTIx_IRQn, GPIO_TypeDef* x, uint8_t EXTI_PortSrcGPIOx, FunctionalState st, EXTITrigger_TypeDef tr, uint8_t prior, uint8_t subprior){
+
+void Btn_Init(BTN_EXTI btn, FunctionalState st){
 	EXTI_InitTypeDef exti;
 	NVIC_InitTypeDef nvic;
-	GPIOInit(x, p, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_High_Speed);
 
-	SYSCFG_EXTILineConfig(EXTI_PortSrcGPIOx, EXTI_PinSrcX);
+	switch(btn){
+	case START:
+		GPIOInit(GPIOC, GPIO_Pin_12, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_High_Speed);
+		exti.EXTI_Line = EXTI_Line12; //ne radi za alternative_int (posle pin 15), svejedno za to nije namenjeno
 
-	exti.EXTI_Line =(uint32_t) p; //ne radi za alternative_int (posle pin 15), svejedno za to nije namenjeno
+		nvic.NVIC_IRQChannel = EXTI15_10_IRQn;
+		nvic.NVIC_IRQChannelPreemptionPriority = 1;
+		nvic.NVIC_IRQChannelSubPriority = 1;
+		break;
+	case POWER:
+		GPIOInit(GPIOD, GPIO_Pin_2, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_High_Speed);
+		exti.EXTI_Line = EXTI_Line2; //ne radi za alternative_int (posle pin 15), svejedno za to nije namenjeno
+
+
+		nvic.NVIC_IRQChannel = EXTI2_IRQn;
+		nvic.NVIC_IRQChannelPreemptionPriority = 0;
+		nvic.NVIC_IRQChannelSubPriority = 0;
+		break;
+	}
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOD, EXTI_PinSource2);
+
 	exti.EXTI_LineCmd = st;
 	exti.EXTI_Mode = EXTI_Mode_Interrupt;
-	exti.EXTI_Trigger = tr;
+	exti.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
 	EXTI_Init(&exti);
 
-	nvic.NVIC_IRQChannel = EXTIx_IRQn;
-	nvic.NVIC_IRQChannelPreemptionPriority = prior;
-	nvic.NVIC_IRQChannelSubPriority = subprior;
 	nvic.NVIC_IRQChannelCmd = st;
 	NVIC_Init(&nvic);
 }
 
+void Btn_DeInit(BTN_EXTI btn){
+	EXTI_InitTypeDef exti;
+	NVIC_InitTypeDef nvic;
+
+	switch(btn){
+		case START:
+			GPIOInit(GPIOC, GPIO_Pin_12, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_High_Speed);
+			exti.EXTI_Line = EXTI_Line12; //ne radi za alternative_int (posle pin 15), svejedno za to nije namenjeno
+
+			nvic.NVIC_IRQChannel = EXTI15_10_IRQn;
+			break;
+		case POWER:
+			GPIOInit(GPIOD, GPIO_Pin_2, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_High_Speed);
+			exti.EXTI_Line = EXTI_Line2; //ne radi za alternative_int (posle pin 15), svejedno za to nije namenjeno
+
+			nvic.NVIC_IRQChannel = EXTI2_IRQn;
+			break;
+		}
+
+	exti.EXTI_LineCmd = DISABLE;
+	exti.EXTI_Mode = EXTI_Mode_Interrupt;
+	exti.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+	EXTI_Init(&exti);
+
+	nvic.NVIC_IRQChannelPreemptionPriority = 1;
+	nvic.NVIC_IRQChannelSubPriority = 1;
+	nvic.NVIC_IRQChannelCmd = DISABLE;
+	NVIC_Init(&nvic);
+	//GPIODeInit();
+}
 

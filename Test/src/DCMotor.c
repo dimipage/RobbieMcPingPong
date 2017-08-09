@@ -28,7 +28,7 @@ void DC_Init(){
 	pwm.TIM_OCMode = TIM_OCMode_PWM1; //PWM1 = Set on compare match | PWM2 = Clear on compare match
 	pwm.TIM_OutputState = TIM_OutputState_Enable;
 	pwm.TIM_OCPolarity = TIM_OCPolarity_High;
-	pwm.TIM_Pulse = 2540; //inicijalno
+	pwm.TIM_Pulse = 0; //inicijalno
 
 	TIM_OC1Init(TIM3, &pwm);
 	TIM_OC3Init(TIM3, &pwm);
@@ -46,6 +46,7 @@ void DC_Init(){
 	GPIOInit(GPIOC, GPIO_Pin_6, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	GPIOInit(GPIOC, GPIO_Pin_8, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	GPIOInit(GPIOC, GPIO_Pin_9, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
+
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_TIM3);
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource8, GPIO_AF_TIM3);
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource9, GPIO_AF_TIM3);

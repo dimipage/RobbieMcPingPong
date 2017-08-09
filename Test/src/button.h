@@ -14,18 +14,13 @@
 
 #include "gpio.h"
 
-typedef struct{ //nije u upotrebi
-	uint16_t pin;
-	GPIO_TypeDef* GPIOx;
-	FunctionalState state;
-	EXTITrigger_TypeDef trigger;
-	uint8_t priority;
-	uint8_t subpriority;
-}button;
+typedef enum{
+	START,
+	POWER
+}BTN_EXTI;
 
-void Btn_Init(uint16_t p, uint8_t EXTI_PinSrcX, uint8_t EXTIx_IRQn, GPIO_TypeDef* x, uint8_t EXTI_PortSrcGPIOx, FunctionalState st, EXTITrigger_TypeDef tr, uint8_t prior, uint8_t subprior);
-// ^----- hardkoduj, nema potrebe ovako
-void Btn_DeInit();//dovrsi
+void Btn_Init(BTN_EXTI btn, FunctionalState st);
+void Btn_DeInit(BTN_EXTI btn);//dovrsi
 
 
 #endif /* BUTTON_H_ */
