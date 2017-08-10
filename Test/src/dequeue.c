@@ -9,7 +9,7 @@
 
 
 void Dequeue_Init(Dequeue* deq){
-	deq->top = (int) (MAX_LENGTH-1) / 2 + 1;
+	deq->top = (int) (MAX_LENGTH-1) / 2;
 	deq->bot = (int) (MAX_LENGTH-1) / 2;
 	deq->counter = 0 ;
 }
@@ -24,8 +24,8 @@ int push(Ball_typedef ball, Dequeue* deq){
 		//svetli dioda ili tako nesto
 
 	ball.status = 1;
-	deq->top = (deq->top + 1) % MAX_LENGTH;
 	deq->dequeue[deq->top] = ball;
+	deq->top = (deq->top + 1) % MAX_LENGTH;
 	deq->counter++;
 	return 1;
 }
@@ -45,4 +45,8 @@ Ball_typedef pop(Dequeue* deq){
 	deq->bot = (deq->bot + 1) % MAX_LENGTH;
 	deq->counter--;
 	return deq->dequeue[copy];
+}
+
+int Dequeue_GetCounter(Dequeue* deq){
+	return deq->counter;
 }

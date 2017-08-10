@@ -26,5 +26,6 @@ typedef struct{
 void Dequeue_Init(Dequeue* deq);
 int push(Ball_typedef ball, Dequeue* deq);
 Ball_typedef pop(Dequeue* deq);
+int Dequeue_GetCounter(Dequeue* deq);
 
 #endif /* DEQUEUE_H_ */

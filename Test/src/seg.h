@@ -19,13 +19,14 @@ typedef enum{
 typedef struct{
 	MODE_FLAG mode;
 	volatile uint8_t cnt;
-	uint8_t num_array[10]; ///cifre za 7seg
+	uint8_t num_array[10]; ///cifre za 7seg + prazna cifra
 }SEG_Disp;
 
 
 
 void SEG_Init(SEG_Disp* disp);
 void SEG_DisplayNumber(uint8_t num, SEG_Disp* disp);
+void SEG_Off(SEG_Disp* disp);
 void SEG_Inc(SEG_Disp* disp);
 void SEG_ChangeMode(MODE_FLAG m, SEG_Disp* disp);
 int SEG_GetNumber(SEG_Disp* disp);

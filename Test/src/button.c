@@ -19,6 +19,7 @@ void Btn_Init(BTN_EXTI btn, FunctionalState st){
 		nvic.NVIC_IRQChannel = EXTI15_10_IRQn;
 		nvic.NVIC_IRQChannelPreemptionPriority = 1;
 		nvic.NVIC_IRQChannelSubPriority = 1;
+		SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, EXTI_PinSource12);
 		break;
 	case POWER:
 		GPIOInit(GPIOD, GPIO_Pin_2, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_High_Speed);
@@ -28,13 +29,14 @@ void Btn_Init(BTN_EXTI btn, FunctionalState st){
 		nvic.NVIC_IRQChannel = EXTI2_IRQn;
 		nvic.NVIC_IRQChannelPreemptionPriority = 0;
 		nvic.NVIC_IRQChannelSubPriority = 0;
+		SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOD, EXTI_PinSource2);
 		break;
 	}
-	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOD, EXTI_PinSource2);
+
 
 	exti.EXTI_LineCmd = st;
 	exti.EXTI_Mode = EXTI_Mode_Interrupt;
-	exti.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+	exti.EXTI_Trigger = EXTI_Trigger_Rising;
 	EXTI_Init(&exti);
 
 	nvic.NVIC_IRQChannelCmd = st;
