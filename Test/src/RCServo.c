@@ -10,7 +10,7 @@
 
 #define INIT_DUTY_CYCLE 7.5
 #define INIT_ANGLE_PULSE 4914
-#define ANGLE_STEP 18.2
+#define ANGLE_STEP 36.4
 
 TIM_TimeBaseInitTypeDef timer_test;
 TIM_OCInitTypeDef pwm;

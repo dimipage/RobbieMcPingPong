@@ -12,7 +12,6 @@ GPIO_InitTypeDef sen_top, sen_bottom;
 SEG_Disp seg_disp;
 Dequeue deq;
 
-uint8_t start = 1;
 uint8_t ball_counter;
 void State0(){ //init 1
 	//SYSTick clk enable
@@ -87,47 +86,67 @@ void State1(){
 	}
 }
 void State2(){ //start_pauza flag?
+	extern start;
+	Dequeue deq_temp = deq;
+	int ANGLE_STEP = 15;
 	LED_LightOn();
 	Step_BackInit();
-	if(start > 0){
-		//kod za start
-		start = -start;
-		while(Dequeue_GetCounter(&deq) > 0){
-			Ball_typedef ball;
-			ball = pop(&deq);
-			switch(ball.spin){
-			case 1: //levi
-				//DC_SetSpeed(MOT1, 100);//PC6
-				DC_SetSpeed(MOT2, 100);//PC8
-				//DC_SetSpeed(MOT3, 75);//PC9
-				break;
-			case 2: //desni
-				//DC_SetSpeed(MOT1, 100);//PC6
-				DC_SetSpeed(MOT2, 75);//PC8
-				//DC_SetSpeed(MOT3, 100);//PC9
-				break;
-			case 3:	//gore
-				//DC_SetSpeed(MOT1, 75);//PC6
-				DC_SetSpeed(MOT2, 100);//PC8
-				//DC_SetSpeed(MOT3, 100);//PC9
-				break;
-			case 4: //dole
-				//DC_SetSpeed(MOT1, 75);//PC6
-				DC_SetSpeed(MOT2, 75);//PC8
-				//DC_SetSpeed(MOT3, 75);//PC9
-				break;
-			}
-			Step_Step();
-			Delay(1000);
-			//servo pre ili posle, bolje posle za random mod
-			//servo field
-		}
-	}else{
-		//kod za pauzu
-		start = -start;
+	Delay(500);
+	Step_Step();
+	while(1){
+		while(Dequeue_GetCounter(&deq_temp) > 0){
 
+			while(Dequeue_GetCounter(&deq_temp) > 0 && start > 0){
+				Ball_typedef ball;
+				ball = pop(&deq_temp);
+				// RC_SetAngle(ball.field() neka funkcija);
+				RC_SetAngle(ANGLE_STEP);
+				ANGLE_STEP = -ANGLE_STEP;
+				switch(ball.spin){
+				case 1: //levi spin
+					//DC_SetSpeed(MOT1, 100);//PC6
+					DC_SetSpeed(MOT2, 100);//PC8
+					//DC_SetSpeed(MOT3, 75);//PC9
+					break;
+				case 2: //desni
+					//DC_SetSpeed(MOT1, 100);//PC6
+					DC_SetSpeed(MOT2, 75);//PC8
+					//DC_SetSpeed(MOT3, 100);//PC9
+					break;
+				case 3:	//gore
+					//DC_SetSpeed(MOT1, 75);//PC6
+					DC_SetSpeed(MOT2, 100);//PC8
+					//DC_SetSpeed(MOT3, 100);//PC9
+					break;
+				case 4: //dole
+					//DC_SetSpeed(MOT1, 75);//PC6
+					DC_SetSpeed(MOT2, 75);//PC8
+					//DC_SetSpeed(MOT3, 75);//PC9
+					break;
+				}
+				Step_Step();
+				Delay(1000);
+				//servo pre ili posle, bolje posle za random mod
+				//servo field
+			}
+	/*		while(Dequeue_GetCounter(&deq) == 0){
+				if()
+			}*/
+			while(start == 0){
+			//kod za pauzu
+
+			//ugasi pwm il stavi na 1 dutycycle
+				DC_SetSpeed(MOT1, 1);
+				DC_SetSpeed(MOT2, 1);
+				DC_SetSpeed(MOT3, 1);
+				RC_SetAngle(0);
+			}
+		}
+		start = 0;
+		deq_temp = deq;
 	}
 }
+
 void State3(){ //init 0
 
 }

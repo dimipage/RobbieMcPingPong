@@ -32,17 +32,17 @@ extern volatile uint32_t ticks = 0;
 
 //debounce
 #define DEBOUNCE 40
-volatile uint8_t exti_flag = 0;
+volatile int8_t exti_flag = 0;
 volatile int exti_cnt = 0;
-volatile uint8_t exti_reset = 0;
+volatile int8_t exti_reset = 0;
 
 GPIO_InitTypeDef test_btn_rc, test_btn_rc2, exti_test;
 GPIO_InitTypeDef test_btn_step, test_btn_step2;
 GPIO_InitTypeDef nucleo_led;
 GPIO_InitTypeDef sen_top, sen_bottom;
 SEG_Disp seg;
-extern uint8_t State2_flag = 0;
-
+extern int8_t State2_flag = 0;
+extern int8_t start = -1;
 
 int main(void){
 /*425686*/
@@ -120,9 +120,11 @@ void TIM3_IRQHandler(){
 		if(GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_12)){
 			(exti_cnt > 0) ? (exti_cnt-=1) : (exti_cnt = 0);
 			if(exti_flag > 0){
-				if(exti_cnt < 59998 && exti_cnt > 800)//PRESS
+				if(exti_cnt < 59998 && exti_cnt > 800){//PRESS
 					State2_flag = 1;
-					//GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+					(start > 0) ? (start = 0) : (start = 1);
+				}
+
 				else if(exti_cnt >= 59999)		//RESET
 					State1();//LED_LightOn();
 				exti_flag = 0;
