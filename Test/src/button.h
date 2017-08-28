@@ -14,8 +14,9 @@
 
 #include "gpio.h"
 
+
 typedef enum{
-	START,
+	START,	//prvobitno start zamisljen kao interrupt
 	POWER
 }BTN_EXTI;
 

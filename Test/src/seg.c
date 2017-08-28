@@ -15,7 +15,7 @@ void SEG_Init(SEG_Disp* disp){
 /*data*/	GPIOInit(GPIOC, GPIO_Pin_0, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
 /* !EO*/	GPIOInit(GPIOB, GPIO_Pin_0, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
 /* rclk*/	GPIOInit(GPIOA, GPIO_Pin_4, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_2MHz);
-	disp->cnt = 1;
+	disp->cnt = 0;
 	disp->num_array[0] = 0xBF; disp->num_array[1] = 0x06; disp->num_array[2] = 0x5B; disp->num_array[3] = 0xCF;
 	disp->num_array[4] = 0xE6; disp->num_array[5] = 0xED; disp->num_array[6] = 0xFD; disp->num_array[7] = 0x07;
 	disp->num_array[8] = 0xFF; disp->num_array[9] = 0xEF;
@@ -70,12 +70,12 @@ void SEG_Inc(SEG_Disp* disp){
 	switch(disp->mode){
 	case spin:
 		if(disp->cnt == SPIN)
-			disp->cnt = 1;
+			disp->cnt = 0;
 		else disp->cnt++;
 		break;
 	case field:
 		if(disp->cnt == FIELDS)
-			disp->cnt = 1;
+			disp->cnt = 0;
 		else disp->cnt++;
 		break;
 	}

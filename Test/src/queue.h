@@ -5,8 +5,8 @@
  *      Author: Dusan Dimitrijevic
  */
 
-#ifndef DEQUEUE_H_
-#define DEQUEUE_H_
+#ifndef QUEUE_H_
+#define QUEUE_H_
 
 #define MAX_LENGTH 20
 
@@ -21,11 +21,11 @@ typedef struct{
 	int top;
 	int bot;
 	int counter;
-}Dequeue;
+}Queue;
 
-void Dequeue_Init(Dequeue* deq);
-int push(Ball_typedef ball, Dequeue* deq);
-Ball_typedef pop(Dequeue* deq);
-int Dequeue_GetCounter(Dequeue* deq);
+void Queue_Init(Queue* deq);
 
-#endif /* DEQUEUE_H_ */
+int push(Ball_typedef ball, Queue* deq);
+Ball_typedef pop(Queue* deq);
+
+#endif /* QUEUE_H_ */

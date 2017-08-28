@@ -29,9 +29,6 @@ GPIO_InitTypeDef GPIOInit(GPIO_TypeDef* GPIOx, uint32_t GPIOPin, GPIOMode GPIOMo
 	return pin;
 }
 
-void GPIOConfAF(GPIO_InitTypeDef* p){
-
-}
 void GPIODeInit(GPIO_InitTypeDef* p){
 
 }

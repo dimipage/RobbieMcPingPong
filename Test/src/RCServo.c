@@ -5,12 +5,16 @@
  *      Author: Dusan Dimitrijevic
  */
 #include "RCServo.h"
-#include "pwm.h"
 #include "gpio.h"
 
-#define INIT_DUTY_CYCLE 7.5
-#define INIT_ANGLE_PULSE 4914
-#define ANGLE_STEP 36.4
+#define INIT_ANGLE 95.0
+#define INIT_ANGLE_PULSE 5004
+#define ANGLE_STEP 18.2 //kolko perioda impulsa za jedan stepen
+#define MIN_ANGLE_PULSE 3275.8
+#define TOP_ANGLE_STEP 15 // u stepenima
+#define BOT_ANGLE_STEP 20
+#define SPIN_ANGLE_OFFSET 7
+#define SPIN_ANGLE_OFFSET_BOT 2
 
 TIM_TimeBaseInitTypeDef timer_test;
 TIM_OCInitTypeDef pwm;
@@ -39,7 +43,7 @@ void RC_Init(){
 	8.5% duty cycle:  	 pulse_length = ((65535 + 1) * 8.5) / 100 - 1 = 5569
 	6552
 */
-	RC_SetAngle(0.0);
+	RC_SetAngle(INIT_ANGLE);
 	TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
 
 	nested_vector.NVIC_IRQChannel = TIM4_IRQn;
@@ -51,15 +55,15 @@ void RC_Init(){
 	GPIOInit(GPIOB, GPIO_Pin_6, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_TIM4);
 
-	TIM_OC1Init(TIM4, &pwm); //mozda
+	//TIM_OC1Init(TIM4, &pwm); //mozda
 }
 /**
  * Podesavanje ugla od +90 do -90
  * @param angle Stepen pomeraja od -90 do +90
  */
 void RC_SetAngle(double angle){
-	if(angle > -90.0 && angle < 90.0)
-		PWM_SetPulse(&pwm,(uint32_t) (INIT_ANGLE_PULSE + (ANGLE_STEP * angle)));
+	if(angle > 0.0 && angle < 180.0)
+		pwm.TIM_Pulse = (uint32_t) (MIN_ANGLE_PULSE + (ANGLE_STEP * angle));
 	TIM_OC1Init(TIM4, &pwm);
 }
 /**
@@ -70,3 +74,42 @@ double RC_GetAngle(){
 	return (pwm.TIM_Pulse - INIT_ANGLE_PULSE / ANGLE_STEP);
 }
 
+void RC_SetField(Ball_typedef ball){
+	extern ticks;
+	int offset = 0; //offset za ugao ako postoji spin
+
+	switch(ball.spin){
+	case 2: //levi spin
+		offset = -SPIN_ANGLE_OFFSET;
+		break;
+	case 3: //desni
+		offset = SPIN_ANGLE_OFFSET;
+		break;
+	}
+
+	if(ball.field >=1 && ball.field <=3){
+		RC_SetAngle(80.0 + offset + ((ball.field - 1) * TOP_ANGLE_STEP));
+	}
+	else
+		if(ball.field > 3 && ball.field <= 6){
+			switch(ball.spin){
+			case 2: //levi spin
+				offset -= SPIN_ANGLE_OFFSET_BOT;
+				break;
+			case 3: //desni
+				offset += SPIN_ANGLE_OFFSET_BOT;
+				break;
+			}
+			RC_SetAngle(75.0 + offset + ((ball.field - 4) * BOT_ANGLE_STEP));
+		}		//PWM_SetPulse(&pwm, (uint32_t) (MIN_ANGLE_PULSE + ((field - 3) * BOT_ANGLE_STEP * ANGLE_STEP)));
+	if(ball.field == 0){
+		int random;
+		random = (ticks % 6) + 1;
+		Ball_typedef copy;
+		copy.spin = ball.spin;
+		copy.field = random;
+		RC_SetField(copy);
+	}
+
+	TIM_OC1Init(TIM4, &pwm);
+}

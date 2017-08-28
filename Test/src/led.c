@@ -7,12 +7,14 @@
 
 #include "led.h"
 int LED_BLINK_INTERVAL;
+
 /**
  *
  */
 void LED_Init(){
 	GPIOInit(GPIOB, GPIO_Pin_13, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Fast_Speed);
 }
+
 /**
  * Menjanje stanja diode. To ce uticati na duzinu trajanja treperenja
  * @param led Struktura LED kojoj se menja stanje

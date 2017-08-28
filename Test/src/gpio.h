@@ -57,7 +57,6 @@ typedef enum {
 } GPIOPuPd;
 
 GPIO_InitTypeDef GPIOInit(GPIO_TypeDef* GPIOx, uint32_t GPIOPin, GPIOMode GPIOMode, GPIOOType GPIOOType, GPIOPuPd GPIOPuPd, GPIOSpeed GPIOSpeed);
-void GPIOConfAF(GPIO_InitTypeDef* p);
 void GPIODeInit(GPIO_InitTypeDef* p);//doradi posle
 
 #endif /* GPIO_H_ */

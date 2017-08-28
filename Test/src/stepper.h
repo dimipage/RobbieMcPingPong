@@ -16,8 +16,6 @@ void Step_Step();
 void Step_Sequence_bcwd();
 void Step_Sequence_fwd();
 void Step_Stepback();
-void Step_BackInit();
-//void Step_SetSpeed(int RPM);
 
 
 #endif /* STEPPER_H_ */
