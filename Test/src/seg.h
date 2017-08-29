@@ -26,7 +26,7 @@ void SEG_Init(SEG_Disp* disp);
 void SEG_DisplayNumber(uint8_t num, SEG_Disp* disp);
 void SEG_Off(SEG_Disp* disp);
 void SEG_Inc(SEG_Disp* disp);
-void SEG_ChangeMode(MODE_FLAG m, SEG_Disp* disp);
-int SEG_GetNumber(SEG_Disp* disp);
+void SEG_ChangeMode(MODE_FLAG mode, SEG_Disp* disp);
+uint8_t SEG_GetNumber(SEG_Disp* disp);
 MODE_FLAG SEG_GetMode(SEG_Disp* disp);
 #endif /* SEG_H_ */

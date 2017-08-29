@@ -16,8 +16,8 @@
 #define SPIN_ANGLE_OFFSET 7
 #define SPIN_ANGLE_OFFSET_BOT 2
 
-TIM_TimeBaseInitTypeDef timer_test;
-TIM_OCInitTypeDef pwm;
+TIM_TimeBaseInitTypeDef timer_test;///tajmer 4 za pwm za servo
+TIM_OCInitTypeDef pwm;///pwm za servo
 
 /**
  * Inicijalizacija TIM4, PWM CH1 na PB6
@@ -55,11 +55,11 @@ void RC_Init(){
 	GPIOInit(GPIOB, GPIO_Pin_6, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_TIM4);
 
-	//TIM_OC1Init(TIM4, &pwm); //mozda
+	//TIM_OC1Init(TIM4, &pwm); //mozda; test;
 }
 /**
- * Podesavanje ugla od +90 do -90
- * @param angle Stepen pomeraja od -90 do +90
+ * Podesavanje ugla od 0 do 180
+ * @param angle Stepen pomeraja od 0 do 180
  */
 void RC_SetAngle(double angle){
 	if(angle > 0.0 && angle < 180.0)
@@ -70,14 +70,17 @@ void RC_SetAngle(double angle){
  * Vraca ugao servo motora
  * @return Ugao servo motora
  */
-double RC_GetAngle(){
+double RC_GetAngle(){///koristi za testiranje kad se podesava potenciometrima
 	return (pwm.TIM_Pulse - INIT_ANGLE_PULSE / ANGLE_STEP);
 }
-
+/**
+ * Podesavanje ugla za ispaljivanje loptice
+ * @param ball Struktura iz koje se cita polje
+ */
 void RC_SetField(Ball_typedef ball){
 	extern ticks;
-	int offset = 0; //offset za ugao ako postoji spin
-
+	int offset = 0; ///offset za ugao ako postoji spin
+					///offset je hardkodiran i nije precizan, loptice se cudno ponasaju
 	switch(ball.spin){
 	case 2: //levi spin
 		offset = -SPIN_ANGLE_OFFSET;

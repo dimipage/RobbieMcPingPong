@@ -35,7 +35,7 @@ int start_state();
 int pause_state();
 int power_state();
 
-//states fptr
+//states f ptr
 int (*state[])(void) = { init_state, set_mode_state, start_state, pause_state, power_state };
 
 //defines
@@ -51,7 +51,10 @@ Queue deq;
 int deq_bot; //kod pauziranja i startovanja kao i posle zavrsetka igre pamti pocetni pointer
 int deq_counter_temp = 0;	//za pamcenje broja setovanih loptica
 
-
+/**
+ * Pocetno stanje za inicijalizaciju komponenti, setovanje klokova itd...
+ * @return Izlazno stanje za dalji prelazak u novo stanje
+ */
 int init_state(){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
@@ -78,7 +81,10 @@ int init_state(){
 
 	return next;
 }
-
+/**
+ * Stanje u kome se podesavaju loptice
+ * @return Izlazno stanje za dalji prelazak u novo stanje
+ */
 int set_mode_state(){
 	Ball_typedef ball;
 
@@ -116,10 +122,10 @@ int set_mode_state(){
 				ball.field = SEG_GetNumber(&seg_disp);
 				SEG_DisplayNumber(0, &seg_disp);
 				SEG_ChangeMode(spin, &seg_disp);
-				if(push(ball, &deq) == 0)
+				if(Enqueue(ball, &deq) == 0)
 					LED_LightOn();
 				instant_start = 0;	//ako je setovana makar jedna loptica
-									//instant start ne radi
+									//onda nije instant start
 			}
 			Delay(500);
 		}
@@ -141,7 +147,10 @@ int set_mode_state(){
 			return reset_btn;
 	}
 }
-
+/**
+ * Stanje za ispaljivanje loptica, ispaljuje istu sekvencu setovanih loptica dokle god ima loptica u loaderu
+ * @return Izlazno stanje za dalji prelazak u novo stanje
+ */
 int start_state(){
 	Delay(500);
 	start_flag = 0;
@@ -152,7 +161,7 @@ int start_state(){
 		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_8) > 0){//senzor 2
 			Ball_typedef ball;
 			bad_sensor_fix = 3;	//reset flag
-			ball = pop(&deq);
+			ball = Dequeue(&deq);
 
 			if(ball.status == -1)//nevalidna loptica
 				return reset_btn;//ovo je samo debug, brisi u release
@@ -194,6 +203,10 @@ int start_state(){
 	}
 	return next;
 }
+/**
+ * Stanje za pauzu
+ * @return Izlazno stanje za dalji prelazak u novo stanje
+ */
 int pause_state(){
 	LED_LightOff();
 	DC_SetSpeed(MOT1, 98);
@@ -212,9 +225,14 @@ int pause_state(){
 			return start_btn;
 	}
  }
+/**
+ * Stanje standby ili sleep nije jos dogovoreno
+ * @return Izlazno stanje za dalji prelazak u novo stanje
+ */
 int power_state(){
 	// turn standby mode
-
+//event ili interrupt?
+//power mode tek treba da bude dogovoren
 	//when wkup return power_btn
 }
 
@@ -232,7 +250,12 @@ int main() {
 
     return 0;
 }
-
+/**
+ * Funkcija za prelazak iz stanja
+ * @param state Stanje iz kog se izlazi
+ * @param ret Izlazno stanje
+ * @return Stanje u koje se ulazi
+ */
 state_codes lookup_transitions(state_codes state, ret_codes ret){
 	int i;
 	for(i = 0; i < 12; i++){

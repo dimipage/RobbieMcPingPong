@@ -16,12 +16,10 @@
 
 
 typedef enum{
-	START,	//prvobitno start zamisljen kao interrupt
+	START,	///prvobitno start zamisljen kao interrupt, depricated
 	POWER
 }BTN_EXTI;
 
-void Btn_Init(BTN_EXTI btn, FunctionalState st);
-void Btn_DeInit(BTN_EXTI btn);//dovrsi
-
+void Btn_Init(BTN_EXTI btn, FunctionalState st); ///takodje i deinit ako je function state DISABLE
 
 #endif /* BUTTON_H_ */

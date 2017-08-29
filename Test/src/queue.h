@@ -17,7 +17,7 @@ typedef struct{
 }Ball_typedef;
 
 typedef struct{
-	Ball_typedef dequeue[MAX_LENGTH];
+	Ball_typedef dequeue[MAX_LENGTH]; ///dogovoreno staticki na 20 loptica
 	int top;
 	int bot;
 	int counter;
@@ -25,7 +25,7 @@ typedef struct{
 
 void Queue_Init(Queue* deq);
 
-int push(Ball_typedef ball, Queue* deq);
-Ball_typedef pop(Queue* deq);
+int Enqueue(Ball_typedef ball, Queue* deq);
+Ball_typedef Dequeue(Queue* deq);
 
 #endif /* QUEUE_H_ */

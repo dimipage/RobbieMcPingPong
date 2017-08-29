@@ -9,7 +9,7 @@
 
 
 /**
- * Inicijalizacija pina za GPIO
+ * Inicijalizacija pina GPIO
  * @param GPIOx Port pina
  * @param GPIOPin Redni broj pina
  * @param GPIOMode Enumeracija moda pina
@@ -28,7 +28,10 @@ GPIO_InitTypeDef GPIOInit(GPIO_TypeDef* GPIOx, uint32_t GPIOPin, GPIOMode GPIOMo
 	GPIO_Init(GPIOx, &pin);
 	return pin;
 }
-
+/**
+ * Deinicijalizacija pina GPIO
+ * @param p
+ */
 void GPIODeInit(GPIO_InitTypeDef* p){
 
 }

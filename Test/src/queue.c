@@ -5,7 +5,12 @@
  *      Author: Dusan Dimitrijevic
  */
 #include "queue.h"
+//mogle je lakse ovo da se odradi sa obicnim nizom
 
+/**
+ * Inicijalizacija reda, popunjavanje reda praznim lopticama
+ * @param deq Struktura red
+ */
 void Queue_Init(Queue* deq){
 	int count;
 	Ball_typedef ball;
@@ -20,14 +25,14 @@ void Queue_Init(Queue* deq){
 }
 
 /**
- * Push na red
- * @param ball Struktura koja se ubacuje u red
+ * Enqueue na red
+ * @param ball Struktura loptica koja se ubacuje u red
+ * @param deq Struktura reda u koji se ubacuje loptica
  */
-int push(Ball_typedef ball, Queue* deq){
+int Enqueue(Ball_typedef ball, Queue* deq){
 	if(deq->counter == MAX_LENGTH)
 		return 0;
 		//svetli dioda ili tako nesto
-
 	ball.status = 1;
 	deq->dequeue[deq->top] = ball;
 	deq->top = (deq->top + 1) % MAX_LENGTH;
@@ -36,10 +41,11 @@ int push(Ball_typedef ball, Queue* deq){
 }
 
 /**
- * Pop iz reda
- * @return Vraca strukturu kuglice ako postoji
+ * Dequeue iz reda
+ * @param deq Struktura reda iz kojeg se izbacuje
+ * @return Vraca strukturu loptice ako postoji, ako ne postoji vraca praznu lopticu sa statusom -1
  */
-Ball_typedef pop(Queue* deq){
+Ball_typedef Dequeue(Queue* deq){
 	int copy = deq->bot;
 	if(deq->counter == 0){
 		Ball_typedef b;

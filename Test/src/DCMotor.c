@@ -10,7 +10,12 @@
 TIM_OCInitTypeDef pwm;
 TIM_TimeBaseInitTypeDef timer;
 
-void DC_SetSpeed(DC_Motor motor, DC_Speed speed){
+/**
+ * Podesavanje brzine jedong DC motora
+ * @param motor MOT1, MOT2 i MOT3 enum
+ * @param speed Brzina u procentima, manji procenat -> veca brzina
+ */
+void DC_SetSpeed(DC_Motor motor, uint8_t speed){
 
 	TIM_OCStructInit(&pwm);
 	pwm.TIM_OCMode = TIM_OCMode_PWM1; //PWM1 = Set on compare match | PWM2 = Clear on compare match
@@ -70,7 +75,7 @@ void DC_Init(){
 	pwm.TIM_OCMode = TIM_OCMode_PWM1; //PWM1 = Set on compare match | PWM2 = Clear on compare match
 	pwm.TIM_OutputState = TIM_OutputState_Enable;
 	pwm.TIM_OCPolarity = TIM_OCPolarity_High;
-	pwm.TIM_Pulse = 5000; //inicijalno
+	pwm.TIM_Pulse = 5000; //dovoljno da se ne krecu
 
 	TIM_OC1Init(TIM3, &pwm);
 	TIM_OC3Init(TIM3, &pwm);
@@ -97,37 +102,44 @@ void DC_Init(){
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource8, GPIO_AF_TIM3);
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource9, GPIO_AF_TIM3);
 }
-
+/**
+ * Podesavanje brzine svih motora za gornja tri polja
+ * @param ball Struktura loptice iz koje se cita spin
+ */
 void DC_SetTopSpeed(Ball_typedef* ball){
 	extern ticks;
 
 	switch(ball->spin){
-	case 0:
+	case 0:///random spin
 		ball->spin = (ticks % 4) + 1;
 		DC_SetTopSpeed(ball);
 		break;
-	case 1:	//normalni
-		DC_SetSpeed(MOT2, 15);//PC6 60
-		DC_SetSpeed(MOT1, 62);//PC8 60
-		DC_SetSpeed(MOT3, 62);//PC9 55
+	case 1:	//normalni spin
+		DC_SetSpeed(MOT2, 15);///raspored motora setovanja je 2,1,3 jer se prvi DC pokondiri ako njemu prvo setujem brzinu
+		DC_SetSpeed(MOT1, 62);///ovo je workaround
+		DC_SetSpeed(MOT3, 62);
 		break;
 	case 2:	//levi
-		DC_SetSpeed(MOT2, 75);//PC6 75
-		DC_SetSpeed(MOT1, 25);//PC8 36
-		DC_SetSpeed(MOT3, 75);//PC9 67
+		DC_SetSpeed(MOT2, 75);
+		DC_SetSpeed(MOT1, 25);
+		DC_SetSpeed(MOT3, 75);
 		break;
 	case 3:	//desni
-		DC_SetSpeed(MOT2, 75);//PC6 75
-		DC_SetSpeed(MOT1, 75);//PC8 68
-		DC_SetSpeed(MOT3, 25);//PC9 35
+		DC_SetSpeed(MOT2, 75);
+		DC_SetSpeed(MOT1, 75);
+		DC_SetSpeed(MOT3, 25);
 		break;
 	case 4:	//gornji
-		DC_SetSpeed(MOT2, 15);//PC6 15
-		DC_SetSpeed(MOT1, 62);//PC8 75
-		DC_SetSpeed(MOT3, 62);//PC9 75
+		DC_SetSpeed(MOT2, 15);
+		DC_SetSpeed(MOT1, 62);
+		DC_SetSpeed(MOT3, 62);
 		break;
 	}
 }
+/**
+ * Podesavanje brzine svih motora za donja tri polja
+ * @param ball Struktura loptice iz koje se cita spin
+ */
 void DC_SetBotSpeed(Ball_typedef* ball){
 	extern ticks;
 	switch(ball->spin){
@@ -136,24 +148,24 @@ void DC_SetBotSpeed(Ball_typedef* ball){
 		DC_SetBotSpeed(ball);
 		break;
 	case 1:	//normalni
-		DC_SetSpeed(MOT2, 77);//PC6 63
-		DC_SetSpeed(MOT1, 62);//PC8 62
-		DC_SetSpeed(MOT3, 62);//PC9 62
+		DC_SetSpeed(MOT2, 77);
+		DC_SetSpeed(MOT1, 62);
+		DC_SetSpeed(MOT3, 62);
 		break;
 	case 2:	//levi
-		DC_SetSpeed(MOT2, 72);//PC6 77
-		DC_SetSpeed(MOT1, 72);//PC8 44
-		DC_SetSpeed(MOT3, 47);//PC9 69
+		DC_SetSpeed(MOT2, 72);
+		DC_SetSpeed(MOT1, 72);
+		DC_SetSpeed(MOT3, 47);
 		break;
 	case 3:	//desni
-		DC_SetSpeed(MOT2, 72);//PC6 79
-		DC_SetSpeed(MOT1, 47);//PC8 70 moze i 80
-		DC_SetSpeed(MOT3, 72);//PC9 41
+		DC_SetSpeed(MOT2, 72);
+		DC_SetSpeed(MOT1, 47);
+		DC_SetSpeed(MOT3, 72);
 		break;
 	case 4:	//gornji
-		DC_SetSpeed(MOT2, 35);//PC6 35
-		DC_SetSpeed(MOT1, 65);//PC8 83
-		DC_SetSpeed(MOT3, 65);//PC9 83
+		DC_SetSpeed(MOT2, 35);
+		DC_SetSpeed(MOT1, 65);
+		DC_SetSpeed(MOT3, 65);
 		break;
 	}
 }

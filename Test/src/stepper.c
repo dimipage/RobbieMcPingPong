@@ -24,24 +24,6 @@ void Step_Init(){
  * Stepper pravi jedan korak tj pomeraj da kuglica prodje do DC motora
  */
 void Step_Step(){ //ne treba if nigde, pff
-/*	if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9)){
-		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_fwd();
-		while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_fwd();
-		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_bcwd();
-	}
-	else{
-		while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_fwd();
-		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_fwd();
-		while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_fwd();
-		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_bcwd();
-	}*/
 	while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
 		Step_Sequence_fwd();
 	while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
@@ -55,16 +37,6 @@ void Step_Step(){ //ne treba if nigde, pff
  * Stepper pravi jedan korak tj pomeraj unazad
  */
 void Step_Stepback(){
-/*	if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9)){
-		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_bcwd();
-	}
-	else {
-		while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_bcwd();
-		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
-			Step_Sequence_bcwd();
-	}*/
 	while(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
 		Step_Sequence_bcwd();
 	while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
