@@ -9,15 +9,15 @@
 int LED_BLINK_INTERVAL;
 
 /**
- * Podesavanje GPIO pina za LED
+ * Setting the GPIO pin for LED
  */
 void LED_Init(){
 	GPIOInit(GPIOB, GPIO_Pin_13, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Fast_Speed);
 }
 
 /**
- * Menjanje intervala za toggle LED
- * @param st Stanje u koje se menja
+ * LED toggle interval
+ * @param st Changing state
  */
 void LED_SetBlinkInterval(uint16_t time){
 	LED_BLINK_INTERVAL = time;
@@ -25,8 +25,8 @@ void LED_SetBlinkInterval(uint16_t time){
 
 
 /**
- * Toggle-uje diodu ako je proslo dovoljno vremena
- * @param l Struktura LED koja se toggluje
+ * Toggles the LED
+ * @param l LED struct
  */
 void LED_Update(){
 	extern ticks;

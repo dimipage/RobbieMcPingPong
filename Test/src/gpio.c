@@ -9,16 +9,15 @@
 
 
 /**
- * Inicijalizacija pina GPIO
- * @param GPIOx Port pina
- * @param GPIOPin Redni broj pina
- * @param GPIOMode Enumeracija moda pina
- * @param GPIOOType Enumeracija tipa pina
- * @param GPIOPuPd Enumeracija PuPd
- * @param GPIOSpeed Enumeracija brzine (low, mid, fast, high)
+ * Init GPIO pin
+ * @param GPIOx Pin port
+ * @param GPIOPin Pin number
+ * @param GPIOMode Pin mode enum
+ * @param GPIOOType Pin type enum
+ * @param GPIOPuPd PuPd enum
+ * @param GPIOSpeed Speed enum (low, mid, fast, high) 						//too general; depricated
 */
 GPIO_InitTypeDef GPIOInit(GPIO_TypeDef* GPIOx, uint32_t GPIOPin, GPIOMode GPIOMode, GPIOOType GPIOOType, GPIOPuPd GPIOPuPd, GPIOSpeed GPIOSpeed){
-				//		^ probaj enum ovde
 	GPIO_InitTypeDef pin;
 	pin.GPIO_Mode = GPIOMode;
 	pin.GPIO_OType = GPIOOType;

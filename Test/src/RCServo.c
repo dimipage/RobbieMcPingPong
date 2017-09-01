@@ -9,18 +9,18 @@
 
 #define INIT_ANGLE 95.0
 #define INIT_ANGLE_PULSE 5004
-#define ANGLE_STEP 18.2 //kolko perioda impulsa za jedan stepen
+#define ANGLE_STEP 18.2 										//impulse period for 1 degree
 #define MIN_ANGLE_PULSE 3275.8
-#define TOP_ANGLE_STEP 15 // u stepenima
+#define TOP_ANGLE_STEP 15 										//in degrees
 #define BOT_ANGLE_STEP 20
-#define SPIN_ANGLE_OFFSET 7
+#define SPIN_ANGLE_OFFSET 8
 #define SPIN_ANGLE_OFFSET_BOT 2
 
-TIM_TimeBaseInitTypeDef timer_test;///tajmer 4 za pwm za servo
-TIM_OCInitTypeDef pwm;///pwm za servo
+TIM_TimeBaseInitTypeDef timer_test;								//timer 4 for servo pwm
+TIM_OCInitTypeDef pwm;											//pwm for servo
 
 /**
- * Inicijalizacija TIM4, PWM CH1 na PB6
+ * Init TIM4, PWM CH1 na PB6
  */
 void RC_Init(){
 	NVIC_InitTypeDef nested_vector;
@@ -33,7 +33,7 @@ void RC_Init(){
 	TIM_TimeBaseInit(TIM4, &timer_test);
 	TIM_Cmd(TIM4, ENABLE);
 	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
-	pwm.TIM_OCMode = TIM_OCMode_PWM1; 					//PWM1 = Set on compare match ====== PWM2 = Clear on compare match
+	pwm.TIM_OCMode = TIM_OCMode_PWM1; 							//PWM1 = Set on compare match ====== PWM2 = Clear on compare match
 	pwm.TIM_OutputState = TIM_OutputState_Enable;
 	pwm.TIM_OCPolarity = TIM_OCPolarity_High;
 /*
@@ -54,12 +54,10 @@ void RC_Init(){
 
 	GPIOInit(GPIOB, GPIO_Pin_6, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_100MHz);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_TIM4);
-
-	//TIM_OC1Init(TIM4, &pwm); //mozda; test;
 }
 /**
- * Podesavanje ugla od 0 do 180
- * @param angle Stepen pomeraja od 0 do 180
+ * Angle set from 0 ~ 180
+ * @param angle Angle in percentage to move the servo
  */
 void RC_SetAngle(double angle){
 	if(angle > 0.0 && angle < 180.0)
@@ -67,25 +65,25 @@ void RC_SetAngle(double angle){
 	TIM_OC1Init(TIM4, &pwm);
 }
 /**
- * Vraca ugao servo motora
- * @return Ugao servo motora
+ * Gets the angle of servo
+ * @return Servo motor angle
  */
-double RC_GetAngle(){///koristi za testiranje kad se podesava potenciometrima
+double RC_GetAngle(){															//Used for testing
 	return (pwm.TIM_Pulse - INIT_ANGLE_PULSE / ANGLE_STEP);
 }
 /**
- * Podesavanje ugla za ispaljivanje loptice
- * @param ball Struktura iz koje se cita polje
+ * Set angle to mach the field
+ * @param ball Struct to read the field from
  */
 void RC_SetField(Ball_typedef ball){
 	extern ticks;
-	int offset = 0; ///offset za ugao ako postoji spin
-					///offset je hardkodiran i nije precizan, loptice se cudno ponasaju
+	int offset = 0; 															//offset if there is spin
+																				//offset is hardcoded currently
 	switch(ball.spin){
-	case 2: //levi spin
+	case 2: 																	//left spin
 		offset = -SPIN_ANGLE_OFFSET;
 		break;
-	case 3: //desni
+	case 3: 																	//right
 		offset = SPIN_ANGLE_OFFSET;
 		break;
 	}
@@ -96,16 +94,16 @@ void RC_SetField(Ball_typedef ball){
 	else
 		if(ball.field > 3 && ball.field <= 6){
 			switch(ball.spin){
-			case 2: //levi spin
+			case 2: 															//left spin
 				offset -= SPIN_ANGLE_OFFSET_BOT;
 				break;
-			case 3: //desni
+			case 3:																//right
 				offset += SPIN_ANGLE_OFFSET_BOT;
 				break;
 			}
 			RC_SetAngle(75.0 + offset + ((ball.field - 4) * BOT_ANGLE_STEP));
 		}		//PWM_SetPulse(&pwm, (uint32_t) (MIN_ANGLE_PULSE + ((field - 3) * BOT_ANGLE_STEP * ANGLE_STEP)));
-	if(ball.field == 0){
+	if(ball.field == 0){														//random field set
 		int random;
 		random = (ticks % 6) + 1;
 		Ball_typedef copy;

@@ -8,8 +8,8 @@
 //mogle je lakse ovo da se odradi sa obicnim nizom
 
 /**
- * Inicijalizacija reda, popunjavanje reda praznim lopticama
- * @param deq Struktura red
+ * Init queue; filling with empty balls
+ * @param deq Queue struct
  */
 void Queue_Init(Queue* deq){
 	int count;
@@ -25,14 +25,14 @@ void Queue_Init(Queue* deq){
 }
 
 /**
- * Enqueue na red
- * @param ball Struktura loptica koja se ubacuje u red
- * @param deq Struktura reda u koji se ubacuje loptica
+ * Enqueue
+ * @param ball Ball to enqueue
+ * @param deq Queue to enqueue the ball
  */
 int Enqueue(Ball_typedef ball, Queue* deq){
 	if(deq->counter == MAX_LENGTH)
 		return 0;
-		//svetli dioda ili tako nesto
+		//light the LED or else
 	ball.status = 1;
 	deq->dequeue[deq->top] = ball;
 	deq->top = (deq->top + 1) % MAX_LENGTH;
@@ -41,16 +41,16 @@ int Enqueue(Ball_typedef ball, Queue* deq){
 }
 
 /**
- * Dequeue iz reda
- * @param deq Struktura reda iz kojeg se izbacuje
- * @return Vraca strukturu loptice ako postoji, ako ne postoji vraca praznu lopticu sa statusom -1
+ * Dequeue
+ * @param deq Queue to dequeue from
+ * @return Ball struct if one exists, if not returns empty ball with status -1
  */
 Ball_typedef Dequeue(Queue* deq){
 	int copy = deq->bot;
 	if(deq->counter == 0){
 		Ball_typedef b;
 		b.status = -1;
-		//svetli dioda ili tako nesto
+		//light the LED or else
 		return b;
 	}
 	deq->bot = (deq->bot + 1) % MAX_LENGTH;

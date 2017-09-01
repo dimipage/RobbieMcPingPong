@@ -18,8 +18,8 @@ typedef enum{
 
 typedef struct{
 	MODE_FLAG mode;
-	volatile uint8_t cnt; //pamti koji broj prikazuje displej
-	uint8_t num_array[10]; //cifre za 7seg
+	volatile uint8_t cnt; 		//number on display; used for counting
+	uint8_t num_array[10]; 		//numbers for 7seg
 }SEG_Disp;
 
 void SEG_Init(SEG_Disp* disp);

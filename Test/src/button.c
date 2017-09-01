@@ -7,9 +7,9 @@
 #include "button.h"
 
 /**
- * Podesavanje GPIO, NVCI i EXTI za start ili power
- * @param btn Tip dugmeta sa prekidom; START ili POWER
- * @param st Stanje dugmeta; ENABLE ili DISABLE
+ * Setting GPIO, NVCI & EXTI for start or power
+ * @param btn Interrupt button type; START or POWER
+ * @param st Init button state; ENABLE or DISABLE
  */
 void Btn_Init(BTN_EXTI btn, FunctionalState st){
 	EXTI_InitTypeDef exti;
@@ -18,7 +18,7 @@ void Btn_Init(BTN_EXTI btn, FunctionalState st){
 	switch(btn){
 	case START:
 		GPIOInit(GPIOC, GPIO_Pin_12, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_High_Speed);
-		exti.EXTI_Line = EXTI_Line12; //ne radi za alternative_int (posle pin 15), svejedno za to nije namenjeno
+		exti.EXTI_Line = EXTI_Line12; //doesnt work for alternative_int (after pin 15), anyway it wont be used
 
 		nvic.NVIC_IRQChannel = EXTI15_10_IRQn;
 		nvic.NVIC_IRQChannelPreemptionPriority = 1;
@@ -27,7 +27,7 @@ void Btn_Init(BTN_EXTI btn, FunctionalState st){
 		break;
 	case POWER:
 		GPIOInit(GPIOA, GPIO_Pin_0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_High_Speed);
-		exti.EXTI_Line = EXTI_Line0; //ne radi za alternative_int (posle pin 15), svejedno za to nije namenjeno
+		exti.EXTI_Line = EXTI_Line0; //doesnt work for alternative_int (after pin 15), anyway it wont be used
 
 		nvic.NVIC_IRQChannel = EXTI0_IRQn;
 		nvic.NVIC_IRQChannelPreemptionPriority = 0;

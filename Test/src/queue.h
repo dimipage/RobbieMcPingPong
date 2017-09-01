@@ -17,7 +17,7 @@ typedef struct{
 }Ball_typedef;
 
 typedef struct{
-	Ball_typedef dequeue[MAX_LENGTH]; ///dogovoreno staticki na 20 loptica
+	Ball_typedef dequeue[MAX_LENGTH]; 		//static 20 balls;
 	int top;
 	int bot;
 	int counter;
